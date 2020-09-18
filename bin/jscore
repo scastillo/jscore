@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/jscore'
+require 'json'
+
+hashC = { one: "eins", two: {two_1: "2-1", two_2: "2-2"}, three: "drei", five: "5" }
+hashD = { one: "eins", two: {two_1: "2-1", two_2: "2-2"}, three: "3", four: "four" }
+
+if ARGV.length < 2
+  puts "jscore v0.0"
+  puts "The allways improving JSON object similarity score."
+  puts ""
+  puts "Usage: jscore FILE_1 FILE_2"
+  exit 1
+end
+
+path_a = ARGV[0]
+path_b = ARGV[1]
+
+text_a = File.read(path_a)
+text_b = File.read(path_b)
+
+hashA = JSON.parse(text_a)
+hashB = JSON.parse(text_b)
+
+score = Jscore::similarity(hashA, hashB)
+
+#puts "cap #{score[:cap]}"
+#puts "score #{score[:score]}"
+puts "#{score[:score]/(score[:cap]-2.0)}"
+#SMELL: a better way to not correct this 2.0
